@@ -13,7 +13,7 @@ export default defineConfig({
   name: "default",
   title: "Ryan Heiart — Photos",
 
-  projectId: process.env.SANITY_STUDIO_PROJECT_ID || "REPLACE_WITH_PROJECT_ID",
+  projectId: process.env.SANITY_STUDIO_PROJECT_ID || "etahflo7",
   dataset: process.env.SANITY_STUDIO_DATASET || "production",
 
   plugins: [
