@@ -54,6 +54,8 @@ const VALID_SPORTS: Sport[] = [
   "Soccer",
   "Softball",
   "Football",
+  "Hockey",
+  "Wrestling",
   "Track",
   "Other",
 ];

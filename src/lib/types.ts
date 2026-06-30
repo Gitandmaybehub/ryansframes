@@ -7,6 +7,8 @@ export type Sport =
   | "Soccer"
   | "Softball"
   | "Football"
+  | "Hockey"
+  | "Wrestling"
   | "Track"
   | "Other";
 

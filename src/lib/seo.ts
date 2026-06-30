@@ -41,6 +41,8 @@ const SPORTS_KNOWN = [
   "Baseball photography",
   "Softball photography",
   "Soccer photography",
+  "Hockey photography",
+  "Wrestling photography",
   "Action and event photography",
 ];
 

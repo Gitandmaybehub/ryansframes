@@ -36,6 +36,8 @@ export const photo = defineType({
           { title: "Soccer", value: "Soccer" },
           { title: "Softball", value: "Softball" },
           { title: "Football", value: "Football" },
+          { title: "Hockey", value: "Hockey" },
+          { title: "Wrestling", value: "Wrestling" },
           { title: "Track", value: "Track" },
           { title: "Other", value: "Other" },
         ],

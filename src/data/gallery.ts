@@ -110,6 +110,8 @@ export function sportsIn(photos: GalleryPhoto[]): Sport[] {
     "Soccer",
     "Softball",
     "Football",
+    "Hockey",
+    "Wrestling",
     "Track",
     "Other",
   ];
