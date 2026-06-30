@@ -1,26 +1,296 @@
 @import "tailwindcss";
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
+/* ============================================================================
+   Ryan Heiart Photography — Design System (dark, athletic)
+   Stadium-night palette: near-black surfaces, a single deep-crimson accent,
+   and condensed "varsity" display type. The photographs supply the color;
+   crimson carries the brand and the conversion.
+   ============================================================================ */
+
+@theme {
+  /* ---- Surfaces ---- */
+  --color-background: #09090b; /* page */
+  --color-surface: #131316; /* cards / panels */
+  --color-surface-2: #1b1b1f; /* elevated panels */
+  --color-border: #272730; /* hairline border (solid) */
+
+  /* ---- Text ---- */
+  --color-foreground: #f6f6f7; /* primary text */
+  --color-muted: #a8a8b2; /* secondary text */
+  --color-faint: #8c8c97; /* tertiary / labels — ~5:1 on background (WCAG AA) */
+
+  /* ---- Accent (deep crimson) ----
+     accent          fills, buttons (with WHITE text), borders, big display
+     accent-deep     pressed / hover on filled buttons (white stays ≥6:1)
+     accent-soft     small accent TEXT on dark surfaces, links, glows (≥6:1)   */
+  --color-accent: #cc1a2f;
+  --color-accent-deep: #9e1320;
+  --color-accent-soft: #ff5d6c;
+  --color-accent-foreground: #ffffff;
+
+  /* ---- Type ----
+     sans       body / UI (Geist)
+     display    block numbers, captions, varsity nav (Anton, condensed heavy)
+     condensed  eyebrows, nav, labels, stats (Oswald)                          */
+  --font-sans: var(--font-geist-sans), ui-sans-serif, system-ui, -apple-system,
+    "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  --font-display: var(--font-anton), "Arial Narrow", var(--font-geist-sans),
+    system-ui, sans-serif;
+  --font-condensed: var(--font-oswald), var(--font-geist-sans), ui-sans-serif,
+    system-ui, sans-serif;
+
+  /* ---- Radii ---- */
+  --radius-card: 14px;
+
+  /* ---- Easing / timing ---- */
+  --ease-out-quart: cubic-bezier(0.25, 1, 0.5, 1);
+
+  /* ---- Container ---- */
+  --breakpoint-3xl: 1800px;
 }
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-}
-
-@media (prefers-color-scheme: dark) {
+/* ---------------------------------------------------------------------------
+   Base
+--------------------------------------------------------------------------- */
+@layer base {
   :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+    color-scheme: dark;
+
+    /* Brushed "chrome" fill for display type — bright white at the cap line
+       fading to a cool grey at the baseline. Gives headlines and big numbers
+       the metallic pop of a recruiting "COMMITTED" graphic. */
+    --gradient-chrome: linear-gradient(
+      180deg,
+      #ffffff 0%,
+      #e6e6ea 36%,
+      #b2b2ba 74%,
+      #8d8d96 100%
+    );
+  }
+
+  * {
+    border-color: var(--color-border);
+  }
+
+  html {
+    -webkit-text-size-adjust: 100%;
+    scrollbar-gutter: stable;
+    /* Anchor jumps clear the fixed 76px header */
+    scroll-padding-top: 76px;
+  }
+
+  body {
+    background-color: var(--color-background);
+    color: var(--color-foreground);
+    font-family: var(--font-sans);
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+    overflow-x: hidden;
+  }
+
+  ::selection {
+    background-color: var(--color-accent);
+    color: var(--color-accent-foreground);
+  }
+
+  /* Headings default to the condensed face; big "poster" titles opt into
+     .font-display (Anton) explicitly. */
+  h1, h2, h3, h4 {
+    font-family: var(--font-condensed);
+    font-weight: 600;
+    letter-spacing: -0.01em;
+    text-wrap: balance;
+  }
+
+  /* Visible, on-brand focus ring for keyboard users */
+  :focus-visible {
+    outline: 2px solid var(--color-accent-soft);
+    outline-offset: 3px;
+    border-radius: 2px;
+  }
+
+  /* Custom scrollbar (desktop) */
+  @media (pointer: fine) {
+    ::-webkit-scrollbar {
+      width: 11px;
+      height: 11px;
+    }
+    ::-webkit-scrollbar-track {
+      background: var(--color-background);
+    }
+    ::-webkit-scrollbar-thumb {
+      background: #34232a;
+      border: 3px solid var(--color-background);
+      border-radius: 999px;
+    }
+    ::-webkit-scrollbar-thumb:hover {
+      background: #4a2730;
+    }
   }
 }
 
-body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+/* ---------------------------------------------------------------------------
+   Utilities / components
+--------------------------------------------------------------------------- */
+@layer components {
+  /* Section eyebrow: condensed, uppercase, tracked, crimson */
+  .eyebrow {
+    font-family: var(--font-condensed);
+    font-size: 0.78rem;
+    font-weight: 600;
+    line-height: 1;
+    letter-spacing: 0.25em;
+    text-transform: uppercase;
+    color: var(--color-accent-soft);
+  }
+
+  /* Big "commitment-graphic" headline: the heavy, condensed varsity block
+     face (Anton) set on a slight oblique with a brushed grey→white chrome
+     fill — the look of a recruiting "COMMITTED" poster. */
+  .display-title {
+    font-family: var(--font-display);
+    font-weight: 400;
+    text-transform: uppercase;
+    letter-spacing: 0.005em;
+    line-height: 1.02;
+    text-wrap: balance;
+
+    background-image: var(--gradient-chrome);
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    color: transparent;
+  }
+
+  /* Wide site gutter that stays comfortable at every width */
+  .site-px {
+    padding-inline: clamp(1.25rem, 5vw, 5rem);
+  }
+
+  /* Fade an image's bottom for caption legibility */
+  .img-veil {
+    background: linear-gradient(
+      to top,
+      rgba(9, 9, 11, 0.92) 0%,
+      rgba(9, 9, 11, 0.55) 28%,
+      rgba(9, 9, 11, 0) 60%
+    );
+  }
+}
+
+@layer utilities {
+  /* Subtle film grain — premium texture, pointer-safe, very low opacity */
+  .grain::after {
+    content: "";
+    position: fixed;
+    inset: 0;
+    z-index: 60;
+    pointer-events: none;
+    opacity: 0.04;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  }
+
+  /* Reveal helpers used by GSAP; safe defaults if JS/animation is off */
+  .reveal {
+    opacity: 1;
+  }
+
+  .text-shadow-hero {
+    text-shadow: 0 2px 40px rgba(0, 0, 0, 0.5);
+  }
+
+  /* Brushed grey→white "chrome" fill — pairs with the varsity display type so
+     stat numbers and nav pop against the dark surfaces. Apply to text that is
+     normally light/foreground; leave crimson and over-photo labels alone. */
+  .text-chrome {
+    background-image: var(--gradient-chrome);
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    color: transparent;
+  }
+}
+
+/* ---------------------------------------------------------------------------
+   Animated background — slow pan on the pattern grid (honors reduced-motion
+   via the media query at the bottom of this file)
+--------------------------------------------------------------------------- */
+@keyframes rh-grid-pan {
+  from {
+    background-position: 0 0;
+  }
+  to {
+    background-position: var(--rh-pan, 40px) var(--rh-pan, 40px);
+  }
+}
+
+.rh-bg-pan {
+  animation: rh-grid-pan 38s linear infinite;
+}
+
+/* ---------------------------------------------------------------------------
+   Mobile menu (Radix Dialog) transitions
+--------------------------------------------------------------------------- */
+@keyframes rh-fade-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+@keyframes rh-fade-out {
+  from {
+    opacity: 1;
+  }
+  to {
+    opacity: 0;
+  }
+}
+@keyframes rh-panel-in {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+@keyframes rh-panel-out {
+  from {
+    opacity: 1;
+    transform: translateY(0);
+  }
+  to {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+}
+
+.menu-overlay[data-state="open"] {
+  animation: rh-fade-in 0.25s ease both;
+}
+.menu-overlay[data-state="closed"] {
+  animation: rh-fade-out 0.2s ease both;
+}
+.menu-panel[data-state="open"] {
+  animation: rh-panel-in 0.32s var(--ease-out-quart) both;
+}
+.menu-panel[data-state="closed"] {
+  animation: rh-panel-out 0.22s ease both;
+}
+
+/* ---------------------------------------------------------------------------
+   Reduced motion — respect the user's OS preference
+--------------------------------------------------------------------------- */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
 }

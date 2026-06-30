@@ -1,65 +1,79 @@
-import Image from "next/image";
+import Link from "next/link";
+import { ArrowUpRight } from "lucide-react";
+import { Hero } from "@/components/sections/hero";
+import { Portfolio } from "@/components/sections/portfolio-gallery";
+import { getGalleryPhotos } from "@/lib/sanity";
+import { buttonVariants } from "@/components/ui/button";
+import { cn } from "@/lib/utils";
 
-export default function Home() {
+// Re-check Sanity for new photos at most once a minute (ISR).
+export const revalidate = 60;
+
+export default async function Home() {
+  const photos = await getGalleryPhotos();
+
   return (
-    <div className="flex flex-col flex-1 items-center justify-center bg-zinc-50 font-sans dark:bg-black">
-      <main className="flex flex-1 w-full max-w-3xl flex-col items-center justify-between py-32 px-16 bg-white dark:bg-black sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={100}
-          height={20}
-          priority
-        />
-        <div className="flex flex-col items-center gap-6 text-center sm:items-start sm:text-left">
-          <h1 className="max-w-xs text-3xl font-semibold leading-10 tracking-tight text-black dark:text-zinc-50">
-            To get started, edit the page.tsx file.
-          </h1>
-          <p className="max-w-md text-lg leading-8 text-zinc-600 dark:text-zinc-400">
-            Looking for a starting point or more instructions? Head over to{" "}
-            <a
-              href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Templates
-            </a>{" "}
-            or the{" "}
-            <a
-              href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Learning
-            </a>{" "}
-            center.
-          </p>
-        </div>
-        <div className="flex flex-col gap-4 text-base font-medium sm:flex-row">
-          <a
-            className="flex h-12 w-full items-center justify-center gap-2 rounded-full bg-foreground px-5 text-background transition-colors hover:bg-[#383838] dark:hover:bg-[#ccc] md:w-[158px]"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
+    <>
+      <Hero />
+
+      {/* A live view of the portfolio, right on the landing page. The hero's
+          scroll cue targets this #featured anchor. */}
+      <section id="featured" className="py-24 sm:py-32">
+        <div className="site-px mx-auto mb-10 flex max-w-[1800px] flex-col gap-6 sm:mb-12 sm:flex-row sm:items-end sm:justify-between">
+          <div>
+            <p className="eyebrow">Portfolio</p>
+            <h2 className="display-title mt-4 text-[2.6rem] leading-[1.05] sm:text-6xl">
+              Selected frames
+            </h2>
+          </div>
+          <Link
+            href="/portfolio"
+            className={cn(buttonVariants({ variant: "outline" }))}
           >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={16}
-              height={16}
+            Open full portfolio
+            <ArrowUpRight className="size-4 opacity-70" />
+          </Link>
+        </div>
+        <Portfolio photos={photos} />
+      </section>
+
+      {/* Funnel to the two key pages */}
+      <section className="site-px mx-auto max-w-[1800px] pb-24 sm:pb-32">
+        <div className="grid gap-4 sm:gap-6 md:grid-cols-2">
+          <Link
+            href="/about"
+            className="group relative overflow-hidden rounded-2xl border border-border bg-surface/50 p-8 transition-colors hover:border-white/20 sm:p-10"
+          >
+            <p className="eyebrow">About</p>
+            <h3 className="display-title mt-3 text-3xl sm:text-4xl">
+              Meet the photographer
+            </h3>
+            <p className="mt-3 max-w-sm text-sm leading-relaxed text-muted">
+              The story behind the lens — who Ryan is and how he shoots.
+            </p>
+            <ArrowUpRight className="absolute right-7 top-8 size-6 text-faint transition-colors group-hover:text-foreground" />
+          </Link>
+
+          <Link
+            href="/contact"
+            className="group relative overflow-hidden rounded-2xl border border-accent/40 bg-accent/[0.08] p-8 transition-colors hover:border-accent/70 sm:p-10"
+          >
+            <div
+              aria-hidden
+              className="pointer-events-none absolute -right-16 -top-16 h-48 w-48 rounded-full bg-accent/20 blur-3xl"
             />
-            Deploy Now
-          </a>
-          <a
-            className="flex h-12 w-full items-center justify-center rounded-full border border-solid border-black/[.08] px-5 transition-colors hover:border-transparent hover:bg-black/[.04] dark:border-white/[.145] dark:hover:bg-[#1a1a1a] md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Documentation
-          </a>
+            <p className="eyebrow">Contact</p>
+            <h3 className="display-title mt-3 text-3xl sm:text-4xl">
+              Book a shoot
+            </h3>
+            <p className="mt-3 max-w-sm text-sm leading-relaxed text-muted">
+              Need a photographer for an upcoming game? Let&apos;s capture your
+              moment.
+            </p>
+            <ArrowUpRight className="absolute right-7 top-8 size-6 text-accent-soft transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
+          </Link>
         </div>
-      </main>
-    </div>
+      </section>
+    </>
   );
 }
